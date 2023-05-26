@@ -17,6 +17,12 @@ Install nodejs server libraries
 Run migration
 `npx prisma migrate dev --name init`
 
+`n` to refuse reset database
+
+Create directory to upload in it 
+`mkdir uploads`
+
+
 run node server  
 `npm run dev`  
 
