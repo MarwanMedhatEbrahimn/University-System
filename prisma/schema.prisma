@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id             Int         @id @default(autoincrement())
+  email          String      @unique
+  password       String
+  name           String?
+  academicNumber String?
+  isAdmin        Boolean?
+  isDoctor       Boolean?
+  isStudent      Boolean?
+  subjects       Subject[]
+  department     Department? @relation(fields: [departmentId], references: [id])
+  departmentId   Int?
+  stateOFsub     stateOFsub[]
+  Edit           Boolean @default(true)
+  
+}
+model stateOFsub {
+  
+  id             Int         @id @default(autoincrement())
+  degree         Float?     @default(0)
+  name           String?
+  //succeeded, failure, registered
+  state          String? 
+  user_Id Int
+  subject_id    Int
+  user      User    @relation(fields: [user_Id], references: [id])
+  subject   Subject? @relation(fields: [subject_id], references: [id])
+}
+
+
+model Subject {
+  id   Int     @id @default(autoincrement())
+  name String
+  code String?
+  departmentId Int?
+  department   Department? @relation(fields: [departmentId], references: [id])
+  User   User? @relation(fields: [userId], references: [id])
+  userId Int?
+  stateOfsub stateOFsub[]
+  Files Files[]
+  dependencies String? @default("")
+}
+
+model Department {
+  id      Int       @id @default(autoincrement())
+  name    String
+  code    String
+  Subject Subject[]
+  users   User[]
+}
+
+model Files {
+    id      Int       @id @default(autoincrement())
+    Url     String?
+    SubjectId Int
+    subject  Subject @relation(fields: [SubjectId], references: [id]) 
+    Name String
+    description String?
+}
