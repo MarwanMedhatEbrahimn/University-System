@@ -1,12 +1,13 @@
-# College Web Project
+# University System
+
 
 ## Used on the project
 
 Backend: [Express](https://expressjs.com/)  
-Front-end: [React](https://reactjs.org/) with [Chakra-UI](https://chakra-ui.com/)
+Front-end: [EJS](https://ejs.co/)
 
 
-## run servers
+## Installation & run servers
 
 `cp .env.example .env`
 
@@ -24,8 +25,12 @@ Install React Project libraries
 `npm install`
 
 run react server  
-`npm run dev` on web directory  
+`npm run dev` on web directory 
 
-INstall multer to upload file
-npm install multer
+## Usage
+To login By Admin 
+Email: Admin@gmail.com
+Passward: 123
+All Doctors emails Passward: 0
+All Students emails Passward: 1
 
