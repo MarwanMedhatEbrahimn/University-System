@@ -8,6 +8,7 @@ Front-end: [EJS](https://ejs.co/)
 
 
 ## Installation & run servers
+Write in Terminal the following commands
 
 `cp .env.example .env`
 
