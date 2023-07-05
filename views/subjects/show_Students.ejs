@@ -1,8 +1,8 @@
 <%- include('../layout/header.ejs') %>
-  <div class="">
-    <div class="flex flex-col gap-3 container mx-auto my-10 w-3/5">
+  <div class="flex justify-around">
+    <div class="flex flex-col gap-3 mx-auto my-10 ">
       <div class="flex items-center justify-between">
-        <h1 class="text-3xl font-bold">Subjects</h1>
+        <h1 class="text-3xl font-bold"><%=SubjectName%></h1>
       </div>
       <div class=" bg-white rounded shadow">
         <table class="min-w-full text-left text-sm font-light">
@@ -13,11 +13,10 @@
               <th scope="col" class="px-6 py-4">Email</th>
               <th scope="col" class="px-6 py-4">Academic Number</th>
               <th scope="col" class="px-6 py-4">Department</th>
-
+              <th scope="col" class="px-6 py-4">Action</th>
             </tr>
           </thead>
-          <tbody>
-
+          <tbody id="tbody">
             <% Students.forEach((Student, idx)=> { %>
               <tr class="border-b dark:border-neutral-500">
                 <td class="whitespace-nowrap px-6 py-4 font-medium">
@@ -36,23 +35,78 @@
                   <td class="whitespace-nowrap px-6 py-4">
                     <%= Student.user.department.name %>
                   </td>
-                  <%} else {%>
-                    <td class="whitespace-nowrap px-6 py-4">
-                    </td>
-                  <%}%>
+                <%} else {%>
+                  <td class="whitespace-nowrap px-6 py-4">
+                  </td>
+                <%}%>
+                <td class="whitespace-nowrap px-6 py-4">
+                  <button onclick="UnRegistration('<%=SubjectId%>','<%=Student.user.id%>')">
+                    <i class="fa-solid fa-xmark text-lg text-red-500"></i>
+                  </button>
+                </td>
               </tr>
               <% }) %>
-
           </tbody>
         </table>
       </div>
       <div class="">
-        <a href="/subjects" class="bg-gray-700" style="border-radius: 5px; padding: 5px 10px 5px 10px;  color:white; font-size: 20px;">Back</a>
+        <%if(num==2){%>
+          <a href="/subjects" class="bg-gray-700" style="border-radius: 5px; padding: 5px 10px 5px 10px;  color:white; font-size: 20px;">Back</a>
+        <%}else{%>
+          <a href="/" class="bg-gray-700" style="border-radius: 5px; padding: 5px 10px 5px 10px;  color:white; font-size: 20px;">Back</a>
+        <%}%>
       </div>
 
     </div>
 
   </div>
+  <input id="Students" value="<%=JSON.stringify(Students)%>" hidden/>
 
-
+  <script>
+    function buildTable(Students,SubjectId){
+      let htmlString = ""
+      Students.forEach((Student,idx) => {
+        htmlString +=`<tr class="border-b dark:border-neutral-500">
+                <td class="whitespace-nowrap px-6 py-4 font-medium">
+                  `+ (idx + 1) +`
+                </td>
+                <td class="whitespace-nowrap px-6 py-4">
+                  `+ Student.user.name +`
+                </td>
+                <td class="whitespace-nowrap px-6 py-4">
+                  `+ Student.user.email +`
+                </td>
+                <td class="whitespace-nowrap px-6 py-4">
+                  `+ Student.user.academicNumber +`
+                </td>
+                <td class="whitespace-nowrap px-6 py-4"> `
+                if(Student.user.department){htmlString +=Student.user.department.name} 
+                htmlString +=`</td><td class="whitespace-nowrap px-6 py-4">
+                  <button onclick="UnRegistration('`+SubjectId+`','`+Student.user.id+`')">
+                    <i class="fa-solid fa-xmark text-lg text-red-500"></i>
+                  </button>
+                </td></tr>`
+      });
+      let tbody = document.getElementById("tbody")
+      tbody.innerHTML = htmlString
+       
+    }
+   
+    async function UnRegistration(SubjectId,UserId){
+      Students = JSON.parse(document.getElementById("Students").value)
+      const response = await fetch('/subjects/UnRegistration', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ SubjectId: SubjectId, UserId: UserId })
+      });
+      if (response.ok){
+        var data = await response.json()
+        Students = Students.filter(ele => {
+          if(ele.user.id!=UserId){return ele}
+        })
+        buildTable(Students,SubjectId)
+      }
+      
+    }
+  </script>
   <%- include('../layout/footer.ejs') %>

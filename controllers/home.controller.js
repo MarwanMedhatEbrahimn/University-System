@@ -5,7 +5,7 @@ const prisma = require('../prisma/client')
 router.get('/', async (req, res, next) => {
   try {
     if(req.session.user){
-      user=req.session.user
+      user = req.session.user
       subjects=0;
       if(user.isDoctor)
         subjects = await prisma.Subject.findMany({where:{userId: user.id}}) 
@@ -21,6 +21,9 @@ router.get('/', async (req, res, next) => {
           },
             where:{user_Id: user.id, state:"registered"}
           })
+      }
+      if(user.isAdmin){
+        subjects = await prisma.Subject.findMany({include:{User:true}}) 
       }
         
       res.render('index', { subjects:subjects, active: 'home' })

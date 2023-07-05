@@ -96,25 +96,44 @@ router.post('/subjects/Update/:id',isAdmin, async (req, res, next) => {
 })
 
 // Subject's students page - GET
-router.get('/subjects/Show_Students/:id',isAdmin, async (req, res, next) => {
+router.get('/subjects/Show_Students/:id/:name/:num',isAdmin, async (req, res, next) => {
   try {
     const id = Number(req.params.id)
+    const num = Number(req.params.num)
+    const SubjectName = req.params.name
     const Students = await prisma.stateOFsub.findMany({
       where: {
         subject_id: id
         },
         include: {user:{include:{department:true}}}
     })
+    let active
+    if(num==1){active="home"}
+    else {active=req.active}
     res.render('subjects/show_Students', {
       Students: Students,
-      active: req.active
+      SubjectId: id,
+      SubjectName:SubjectName,
+      num: num,
+      active: active
     })
   } catch (error) {
     next(error)
   }
-
-  // Subject's departments page - GET
-
 })
+router.post('/subjects/UnRegistration',isAdmin, async (req, res, next) => {
+  try {
+    const {SubjectId,UserId} = req.body
+    await prisma.stateOFsub.deleteMany({
+      where:{user_Id:Number(UserId),subject_id:Number(SubjectId)}
+    })
+    return res.json({ msg: "Done" })
+
+  } catch (error) {
+    console.log(error)
+    return res.json({ msg: "error" })
+  }
+})
+
 
 module.exports = router
