@@ -12,32 +12,37 @@ router.get('/departments',isAdmin, async (req, res, next) => {
   }
 })
 
-router.post('/departments/delete/:id',isAdmin, async (req, res, next) => {
+router.post('/department/Close_Open',isAdmin, async (req, res, next) => {
   try {
-    const id = parseInt(req.params.id)
-    const flag = await prisma.Department.delete({where:{id:id}}) 
-    res.redirect('/departments')
+    const id = Number(req.body.id)
+    let state=req.body.state;
+    if(state=="Open"){state="Close"}
+    else{state="Open"}
+    const flag = await prisma.Department.update({where:{id:id},data:{state:state}}) 
+    return res.json({ state: state })
   } catch (error) {
     next(error)
   }
 })
 
-router.get('/departments/Show_Subjects/:id',isAdmin, async (req, res, next) => {
+router.get('/departments/Show_Subjects/:id/:name',isAdmin, async (req, res, next) => {
   try {
     const id = parseInt(req.params.id)
+    const name = req.params.name
     const Subjects = await prisma.Subject.findMany({where:{departmentId:id}}) 
-    res.render('departments/Show_Subjects',{Subjects : Subjects, active: req.active})
+    res.render('departments/Show_Subjects',{Subjects : Subjects,Name:name, active: req.active})
   } catch (error) {
     next(error)
   }
 })
 
-router.get('/departments/Show_Students/:id',isAdmin, async (req, res, next) => {
+router.get('/departments/Show_Students/:id/:name',isAdmin, async (req, res, next) => {
   try {
     const id = parseInt(req.params.id)
+    const name = req.params.name
     const Students = await prisma.User.findMany({where:{departmentId:id , isStudent:true}})
     const department =await prisma.Department.findMany({where:{id:id}});
-    res.render('departments/Show_Students',{Students : Students,department:department[0], active: req.active})
+    res.render('departments/Show_Students',{Students : Students,department:department[0],Name:name, active: req.active})
   } catch (error) {
     next(error)
   }
@@ -56,7 +61,8 @@ router.post('/department/Insert',isAdmin, async (req, res, next) => {
     const department= await prisma.department.create({
       data :{
         name:req.body.name,
-        code:req.body.code
+        code:req.body.code,
+        state:"Open"
       }
     })
     res.redirect('/departments')
@@ -85,5 +91,13 @@ router.post('/departments/Update/:id',isAdmin, async (req, res, next) => {
   }
 })
 
+router.post('/asdasdasd',isAdmin,async()=>{
+  try{
+
+  }
+  catch(error){
+
+  }
+})
 
 module.exports = router

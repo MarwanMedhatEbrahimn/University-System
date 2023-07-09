@@ -22,10 +22,10 @@ model User {
   departmentId   Int?
   stateOFsub     stateOFsub[]
   Edit           Boolean @default(true)
-  
+  registered     Int?     @default(0)
+  succeeded      Int?     @default(0)
 }
 model stateOFsub {
-  
   id             Int         @id @default(autoincrement())
   degree         Float?     @default(0)
   name           String?
@@ -49,6 +49,7 @@ model Subject {
   stateOfsub stateOFsub[]
   Files Files[]
   dependencies String? @default("")
+  state   String?
 }
 
 model Department {
@@ -57,6 +58,7 @@ model Department {
   code    String
   Subject Subject[]
   users   User[]
+  state   String?
 }
 
 model Files {

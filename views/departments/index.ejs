@@ -19,7 +19,6 @@
             </tr>
           </thead>
           <tbody>
-
             <% departments.forEach((department, idx)=> { %>
               <tr class="border-b dark:border-neutral-500">
                 <td class="whitespace-nowrap px-6 py-4 font-medium">
@@ -33,32 +32,61 @@
                 </td>
                 <td class="whitespace-nowrap px-6 py-4 flex items-center gap-3">
                   <a class="bg-green-500 p-2 text-white rounded px-4 py-2"
-                    href="/departments/Show_Students/<%= department.id %>">
+                    href="/departments/Show_Students/<%= department.id %>/<%= department.name %>">
                     <i class="fa fa-eye mr-1"></i>Students
                   </a>
                   <a class="bg-green-500 p-2 text-white rounded px-4 py-2"
-                    href="/departments/Show_Subjects/<%= department.id %>">
+                    href="/departments/Show_Subjects/<%= department.id %>/<%= department.name %>">
                     <i class="fa fa-eye mr-1"></i>Subjects
                   </a>
 
                   <a class="bg-blue-500 p-2 text-white rounded px-4 py-2" href="/departments/Update/<%= department.id %>">
                     <i class="fa fa-pen mr-1"></i> Edit
                   </a>
-
-                  <form action="/departments/delete/<%= department.id %>" method="POST">
-                    <button type="submit" class="bg-red-500 p-2 text-white rounded px-4 py-2">
-                      <i class="fa fa-trash mr-1"></i>Delete</button>
-                  </form>
-
+                  <button id="B<%=department.id%>" value="<%=department.state%>" class="bg-red-500 p-2 text-white rounded px-4 py-2" onclick="Close_Open('<%=department.id%>')">Close</button>
                 </td>
               </tr>
               <% }) %>
-
           </tbody>
         </table>
       </div>
     </div>
   </div>
+  <input id="departments" value="<%=JSON.stringify(departments)%>" hidden/>
+  <script>
+    window.onload=()=>{
+      departments = JSON.parse(document.getElementById("departments").value)
+      departments.forEach(element => {
+        load_State(element.id)
+      });
+    }
+    function load_State(id){
+      let button = document.getElementById("B"+id)
+      state = button.value
+      if(state=="Open"){
+        button.style.backgroundColor="#10B981"
+        button.innerHTML="Open"
+      }
+      else{
+        button.style.backgroundColor="#EF4444"
+        button.innerHTML="Close"
+      }
 
+    }
+    async function Close_Open(id){
+      let state = document.getElementById("B"+id).value
+      const response = await fetch('/department/Close_Open', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: id, state: state})
+      });
+      if(response.ok){
+        let data = await response.json()
+        document.getElementById("B"+id).value = data.state
+        console.log(document.getElementById("B"+id).value)
+        load_State(id)
+      }
+    }
+  </script>
 
   <%- include('../layout/footer.ejs') %>
