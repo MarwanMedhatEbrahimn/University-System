@@ -27,10 +27,6 @@ Create directory to upload in it
 run node server  
 `npm run dev`  
 
-
-Install React Project libraries
-`npm install`
-
 run react server  
 `npm run dev` on web directory 
 
