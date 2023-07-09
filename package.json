@@ -1,31 +1,30 @@
 {
-  "name": "college-web-project",
+  "name": "university-system",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js",
-    "postinstall": "npx prisma migrate dev --name init4 && mkdir uploads",
+    "postinstall": "npx prisma migrate dev --skip-generate --name init && mkdir uploads",
     "start": "node index.js"
-
   },
   "prisma": {
     "seed": "node prisma/seed.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mohamedelhefni/college-web-project.git"
+    "url": "git+https://github.com/MarwanMedhatEbrahimn/University-System.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mohamedelhefni/college-web-project/issues"
+    "url": "https://github.com/MarwanMedhatEbrahimn/University-System/issues"
   },
-  "homepage": "https://github.com/mohamedelhefni/college-web-project#readme",
+  "homepage": "https://github.com/MarwanMedhatEbrahimn/University-System#readme",
   "dependencies": {
-    "@prisma/client": "^4.14.1",
+    "@prisma/client": "^4.16.2",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
