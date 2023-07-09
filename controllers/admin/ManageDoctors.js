@@ -5,7 +5,7 @@ const showsubj = async (req, res, next) => {
     const id = parseInt(req.params.id)
 
     const sub = await prisma.Subject.findMany({
-      where: { userId: null }
+      where: { OR:[{userId: null},{userId: id}] }
     })
     res.render('users/doctors/assign', {
       subjects: sub,
