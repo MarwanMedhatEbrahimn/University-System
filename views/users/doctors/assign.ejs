@@ -70,10 +70,6 @@
                     body: JSON.stringify({ data: array, dele: del })
                 })
                     .then((response) => response.json())
-                    .then((data) => {
-                        console.log(data)
-                        window.location.replace("http://localhost:8000/users")
-                    })
                     .catch((error) => {
                         console.error('Error:', error)
                     })
