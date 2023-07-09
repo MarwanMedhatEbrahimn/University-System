@@ -27,8 +27,9 @@ async function search (name){
 router.post('/search',isAdmin,async (req,res)=>{
   try {
     const users = await search(req.body.name)
+    let Myname = req.session.user.name
     res.set('Access-Control-Allow-Origin', '*');
-    return res.json({ users: users })
+    return res.json({ users: users,Myname:Myname })
 
   } catch (error) {
     return res.json({ users:{} })
@@ -39,7 +40,8 @@ router.post('/search',isAdmin,async (req,res)=>{
 router.get('/users',isAdmin, async (req, res, next) => {
   try {
     const users = await search("")
-    res.render('users/index', { users: users, active: req.active })
+    let Myname = req.session.user.name
+    res.render('users/index', { users: users,Myname:Myname, active: req.active })
   } catch (error) {
     next(error)
   }
@@ -47,7 +49,7 @@ router.get('/users',isAdmin, async (req, res, next) => {
 
 router.get('/users/add',isAdmin, async (req, res) => {
   try {
-    const Departments = await prisma.Department.findMany()
+    const Departments = await prisma.Department.findMany({where:{state:"Open"}})
     res.render('users/create', { Departments:Departments, active: req.active })
   } catch (error) {
     next(error)
@@ -79,7 +81,6 @@ router.post('/users/update/:id',isAdmin, async (req, res, next) => {
   try {
     let userId = Number(req.params.id)
     let { academic_number, name, email, new_password, type, departmentId } = req.body
-    console.log(departmentId)
     let user = {
       academicNumber: academic_number,
       name,
@@ -166,7 +167,7 @@ router.get('/users/edit/:id',isAdmin, async (req, res) => {
         id: Number(req.params.id)
       }
     })
-    const Departments = await prisma.Department.findMany({})
+    const Departments = await prisma.Department.findMany({where:{OR: [{state:"Open"},{id:userView.departmentId}]}})
     userView.type = getUserType(user)
     res.render('users/edit', { active: req.active, userView: userView, Departments:Departments })
   } catch (error) {

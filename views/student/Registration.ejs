@@ -42,7 +42,7 @@
         </table>
       </div>
       <div>
-        <% if (Edit==true) { %>
+        <% if (Edit==true&&SubR.length!=6) { %>
           <div class="w-full table-auto min-w-full text-left text-sm font-light bg-white rounded shadow" id="AddSubject">
             <div class="mb-4">
               <select id="Subjects"  name="Subjects"  class="bg-gray-100 border-2 w-full p-4" onchange="Add_subject()">
@@ -73,7 +73,7 @@
           })
           html += '</select></div></div>'
           document.getElementById("AddSubject").innerHTML=""
-          if(Edit==true&&SubR.length!=6){
+          if(Edit==true&&SubR.length!=6&&SubR.succeeded!=72){
             document.getElementById("AddSubject").innerHTML=html
           }
 

@@ -19,7 +19,7 @@ router.get('/Student/register_Subject',isStudent,async(req,res,next)=>{
   try {
     var user = req.session.user
     user = await prisma.user.findFirst({where:{id:user.id}})
-    Subjects = await prisma.Subject.findMany()
+    Subjects = await prisma.Subject.findMany({where:{state:"Open"}})
     userObject = await prisma.user.findFirst({where:{id:user.id}, 
       include:{stateOFsub:{include:{subject:true}}}})
     const usStSu=userObject.stateOFsub;
@@ -71,6 +71,7 @@ router.post("/RegusterToSubject",isStudent, async function (req, res) {
   try {
     var user = req.session.user
     user = await prisma.user.findFirst({where:{id:user.id}})
+    await prisma.user.update({where:{id:user.id},data:{registered:user.registered+1}})
     var {id} = req.body
     if(user.Edit==true){ 
       await prisma.stateOFsub.create({
@@ -79,7 +80,7 @@ router.post("/RegusterToSubject",isStudent, async function (req, res) {
       })
 
     }
-    Subjects = await prisma.Subject.findMany()
+    Subjects = await prisma.Subject.findMany({where:{state:"Open"}})
     userObject = await prisma.user.findFirst({where:{id:user.id}, 
       include:{stateOFsub:{include:{subject:true}}}})
     const usStSu=userObject.stateOFsub;
@@ -120,7 +121,6 @@ router.post("/RegusterToSubject",isStudent, async function (req, res) {
     res.set('Access-Control-Allow-Origin', '*');
     return res.json({ Subjects: Subjects,  SubR:registerSub, Edit:user.Edit})
   } catch (error) {
-    console.log(error)
     return res.json({ Subjects: {} , SubR:registerSub, Edit:user.Edit})
   }
 });
@@ -128,13 +128,14 @@ router.post("/DeregisteredToSubject",isStudent, async function (req, res) {
   try {
     var user = req.session.user
     user = await prisma.user.findFirst({where:{id:user.id}})
+    await prisma.user.update({where:{id:user.id},data:{registered:user.registered-1}})
     var {id} = req.body
     if(user.Edit==true){ 
       await prisma.stateOFsub.delete({
         where:{id:id}
       })
     }
-    Subjects = await prisma.Subject.findMany()
+    Subjects = await prisma.Subject.findMany({where:{state:"Open"}})
     userObject = await prisma.user.findFirst({where:{id:user.id}, 
       include:{stateOFsub:{include:{subject:true}}}})
     const usStSu=userObject.stateOFsub;
@@ -175,7 +176,6 @@ router.post("/DeregisteredToSubject",isStudent, async function (req, res) {
     res.set('Access-Control-Allow-Origin', '*');
     return res.json({ Subjects: Subjects,  SubR:registerSub, Edit:user.Edit})
   } catch (error) {
-    console.log(error)
     return res.json({ Subjects: {} , SubR:registerSub, Edit:user.Edit})
   }
 });
@@ -230,7 +230,6 @@ router.get('/Student/Profile',isStudent, async (req, res) => {
     user.type = getUserType(user)
     res.render('student/Profile', { active: req.active, user: user, registered: registered, succeeded: succeeded, failure: failure })
   } catch (error) {
-    console.log(error)
     next(error)
   }
 })

@@ -99,7 +99,6 @@ router.post('/Student_search/:id',isDoctor,async (req,res)=>{
     return res.json({ Students: Students })
 
   } catch (error) {
-    console.log(error)
     return res.json({ Students:{} })
   }
 
@@ -122,14 +121,15 @@ router.post("/EndTerm/:id",isDoctor,async (req,res)=>{
     for (const element of states) {
       if(element.degree>=50){
         await prisma.stateOFsub.update({where:{id:element.id},data:{state:"succeeded"}})
+        await prisma.user.update({where:{id:element.user_Id},data:{registered:{ decrement: 1 },succeeded:{ increment: 1 }}})
       }
       else{
         await prisma.stateOFsub.update({where:{id:element.id},data:{state:"failure"}})
+        await prisma.user.update({where:{id:element.user_Id},data:{registered:{ decrement: 1 }}})
       }
     }
     res.redirect("/Doctor/subject/"+Number(req.params.id))
   } catch (error) {
-    console.log(error)
     res.next()
   }
 })

@@ -1,8 +1,55 @@
 <%- include('../layout/header.ejs') %>
+  <div id="opacity" class="opacity"></div>
+  <div id="Registration" class="Front_page">
+    <div class="content_of_front_page">
+      <div class="Searc_button">
+        <div class="search-box">
+          <button class="btn-search" id="btn_search" onclick="submat(search_form)">
+              <i class="fas fa-search"></i>
+          </button>
+          <input type="text" class="input-search" name="search" placeholder="Type to Search..." value="">
+          <input type="submit" style="display:none;" />
+       </div>
+      </div>
+      <div class="search_result_box">  
+        <div class="search_result_content">
+          <table class="min-w-full text-left text-sm font-light">
+            <thead class="border-b font-medium dark:border-neutral-500">
+              <tr>
+                <th scope="col" class="px-6 py-4">Name</th>
+                <th scope="col" class="px-6 py-4">Academic Number</th>
+                <th scope="col" class="px-6 py-4">Action</th>
+              </tr>
+            </thead>
+            <tbody id="Search_body">
+            </tbody>
+          </table>
+        </div>      
+      </div>
+      <div style="position: absolute; bottom: 10px; right: 10px;">
+        <button class="btn btn-primary btn-danger" onclick="Close_Search()">Close</button>
+      </div>
+    </div>
+  </div>
+
+
   <div class="flex justify-around">
     <div class="flex flex-col gap-3 mx-auto my-10 ">
       <div class="flex items-center justify-between">
         <h1 class="text-3xl font-bold"><%=SubjectName%></h1>
+        <div>
+          <button class="px-4 py-2 bg-green-500 text-white rounded shadow" onclick="Open_Search('<%=SubjectId%>')">
+            <i class="fa fa-add"></i>
+            Register
+          </button>
+        </div>
+      </div>
+      
+      <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-bold">Registered</h2>
+        <div class="">
+          <input type="text" id="Register_s" class="search" placeholder="Enter search term...">
+        </div>
       </div>
       <div class=" bg-white rounded shadow">
         <table class="min-w-full text-left text-sm font-light">
@@ -16,8 +63,8 @@
               <th scope="col" class="px-6 py-4">Action</th>
             </tr>
           </thead>
-          <tbody id="tbody">
-            <% Students.forEach((Student, idx)=> { %>
+          <tbody id="Register">
+            <% registered.forEach((Student, idx)=> { %>
               <tr class="border-b dark:border-neutral-500">
                 <td class="whitespace-nowrap px-6 py-4 font-medium">
                   <%= idx + 1 %>
@@ -49,21 +96,114 @@
           </tbody>
         </table>
       </div>
+      <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-bold">succeed</h2>
+        <div class="">
+          <input type="text" id="succeed_s" class="search" placeholder="Enter search term...">
+        </div>
+      </div>
+      <div class=" bg-white rounded shadow">
+        <table class="min-w-full text-left text-sm font-light">
+          <thead class="border-b font-medium dark:border-neutral-500">
+            <tr>
+              <th scope="col" class="px-6 py-4">#</th>
+              <th scope="col" class="px-6 py-4">Name</th>
+              <th scope="col" class="px-6 py-4">Email</th>
+              <th scope="col" class="px-6 py-4">Academic Number</th>
+              <th scope="col" class="px-6 py-4">Department</th>
+            </tr>
+          </thead>
+          <tbody id="succeed">
+            <% succeeded.forEach((Student, idx)=> { %>
+              <tr class="border-b dark:border-neutral-500">
+                <td class="whitespace-nowrap px-6 py-4 font-medium">
+                  <%= idx + 1 %>
+                </td>
+                <td class="whitespace-nowrap px-6 py-4">
+                  <%= Student.user.name %>
+                </td>
+                <td class="whitespace-nowrap px-6 py-4">
+                  <%= Student.user.email %>
+                </td>
+                <td class="whitespace-nowrap px-6 py-4">
+                  <%= Student.user.academicNumber %>
+                </td>
+                <%if(Student.user.department){%>
+                  <td class="whitespace-nowrap px-6 py-4">
+                    <%= Student.user.department.name %>
+                  </td>
+                <%} else {%>
+                  <td class="whitespace-nowrap px-6 py-4">
+                  </td>
+                <%}%>
+              </tr>
+              <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-bold">fail</h2>
+        <div class="">
+          <input type="text" id="fail_s" class="search" placeholder="Enter search term...">
+        </div>
+      </div>
+      <div class=" bg-white rounded shadow">
+        <table class="min-w-full text-left text-sm font-light">
+          <thead class="border-b font-medium dark:border-neutral-500">
+            <tr>
+              <th scope="col" class="px-6 py-4">#</th>
+              <th scope="col" class="px-6 py-4">Name</th>
+              <th scope="col" class="px-6 py-4">Email</th>
+              <th scope="col" class="px-6 py-4">Academic Number</th>
+              <th scope="col" class="px-6 py-4">Department</th>
+            </tr>
+          </thead>
+          <tbody id="fail">
+            <% failure.forEach((Student, idx)=> { %>
+              <tr class="border-b dark:border-neutral-500">
+                <td class="whitespace-nowrap px-6 py-4 font-medium">
+                  <%= idx + 1 %>
+                </td>
+                <td class="whitespace-nowrap px-6 py-4">
+                  <%= Student.user.name %>
+                </td>
+                <td class="whitespace-nowrap px-6 py-4">
+                  <%= Student.user.email %>
+                </td>
+                <td class="whitespace-nowrap px-6 py-4">
+                  <%= Student.user.academicNumber %>
+                </td>
+                <%if(Student.user.department){%>
+                  <td class="whitespace-nowrap px-6 py-4">
+                    <%= Student.user.department.name %>
+                  </td>
+                <%} else {%>
+                  <td class="whitespace-nowrap px-6 py-4">
+                  </td>
+                <%}%>
+              </tr>
+              <% }) %>
+          </tbody>
+        </table>
+      </div>
       <div class="">
-        <%if(num==2){%>
-          <a href="/subjects" class="bg-gray-700" style="border-radius: 5px; padding: 5px 10px 5px 10px;  color:white; font-size: 20px;">Back</a>
-        <%}else{%>
-          <a href="/" class="bg-gray-700" style="border-radius: 5px; padding: 5px 10px 5px 10px;  color:white; font-size: 20px;">Back</a>
-        <%}%>
+        <a <%if(num==2){%>href="/subjects"<%}else{%>href="/"<%}%> class="bg-gray-700" style="border-radius: 5px; padding: 5px 10px 5px 10px;  color:white; font-size: 20px;">Back</a>
       </div>
 
     </div>
 
   </div>
-  <input id="Students" value="<%=JSON.stringify(Students)%>" hidden/>
-
+  <div>
+    <input id="inRegister" value="<%=JSON.stringify(registered)%>" hidden/>
+    <input id="Students" value="" hidden/>
+    <input id="insucceed" value="<%=JSON.stringify(succeeded)%>" hidden/>
+    <input id="infail" value="<%=JSON.stringify(failure)%>" hidden/>
+    <input id="SubjectId" value="<%=SubjectId%>" hidden/>
+  </div>
+  
   <script>
-    function buildTable(Students,SubjectId){
+
+    function buildTable(Students,SubjectId,id){
       let htmlString = ""
       Students.forEach((Student,idx) => {
         htmlString +=`<tr class="border-b dark:border-neutral-500">
@@ -81,19 +221,21 @@
                 </td>
                 <td class="whitespace-nowrap px-6 py-4"> `
                 if(Student.user.department){htmlString +=Student.user.department.name} 
-                htmlString +=`</td><td class="whitespace-nowrap px-6 py-4">
+                if(id=="Register"){
+                  htmlString +=`</td><td class="whitespace-nowrap px-6 py-4">
                   <button onclick="UnRegistration('`+SubjectId+`','`+Student.user.id+`')">
                     <i class="fa-solid fa-xmark text-lg text-red-500"></i>
-                  </button>
-                </td></tr>`
+                  </button>`
+                }  
+                htmlString +=`</td></tr>`
       });
-      let tbody = document.getElementById("tbody")
+      let tbody = document.getElementById(id)
       tbody.innerHTML = htmlString
        
     }
    
     async function UnRegistration(SubjectId,UserId){
-      Students = JSON.parse(document.getElementById("Students").value)
+      Register = JSON.parse(document.getElementById("inRegister").value)
       const response = await fetch('/subjects/UnRegistration', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -101,12 +243,141 @@
       });
       if (response.ok){
         var data = await response.json()
-        Students = Students.filter(ele => {
+        Register = Register.filter(ele => {
           if(ele.user.id!=UserId){return ele}
         })
-        buildTable(Students,SubjectId)
+        buildTable(Register,SubjectId,"Register")
+        document.getElementById("inRegister").value = JSON.stringify(Register)
+        RSE()
       }
       
     }
+  
+    const Register_input = document.getElementById('Register_s');
+    function RSE(){
+      let Register_input = document.getElementById('Register_s');
+      Register = JSON.parse(document.getElementById("inRegister").value)
+      const search = Register_input.value 
+      let search_name = search.toLocaleLowerCase();
+      const SubjectId =document.getElementById("SubjectId").value
+      Register = Register.filter(ele => {
+          const name = ele.user.name.toLocaleLowerCase();
+          if(name.includes(search_name)||ele.user.academicNumber.includes(search_name)){return ele}
+        })
+        buildTable(Register,SubjectId,"Register")
+        Register.value = JSON.stringify(Register)
+    }
+    Register_input.addEventListener('input',RSE)
+  
+    const succeed_input = document.getElementById('succeed_s');
+    succeed_input.addEventListener('input',function(){
+      succeed = JSON.parse(document.getElementById("insucceed").value)
+      const search =succeed_input.value 
+      let search_name = search.toLocaleLowerCase();
+      const SubjectId =document.getElementById("SubjectId").value
+      succeed = succeed.filter(ele => {
+          const name = ele.user.name.toLocaleLowerCase();
+          if(name.includes(search_name)||ele.user.academicNumber.includes(search_name)){return ele}
+        })
+        buildTable(succeed,SubjectId,"succeed")
+        succeed.value = JSON.stringify(succeed)
+    })
+
+    const fail_input = document.getElementById('fail_s');
+    fail_input.addEventListener('input',function(){
+      fail = JSON.parse(document.getElementById("infail").value)
+      const search = fail_input.value 
+      let search_name = search.toLocaleLowerCase();
+      const SubjectId =document.getElementById("SubjectId").value
+      fail = fail.filter(ele => {
+          const name = ele.user.name.toLocaleLowerCase();
+          if(name.includes(search_name)||ele.user.academicNumber.includes(search_name)){return ele}
+        })
+        buildTable(fail,SubjectId,"fail")
+        fail.value = JSON.stringify(fail)
+    })
+    
+    function Open_Search(id){
+      GoSearch(id)
+      let Front_page = document.getElementById("Registration")
+      Front_page.style.display="flex"
+      let opacity = document.getElementById("opacity")
+      opacity.style.display="block"
+    }
+   
+    function Close_Search(){
+      let Front_page = document.getElementById("Registration")
+      Front_page.style.display="none"
+      let opacity = document.getElementById("opacity")
+      opacity.style.display="none"
+    }
+
+    const back_page = document.getElementById('opacity');
+    back_page.addEventListener('click',()=>{
+      Close_Search()
+    })
+
+    async function GoSearch(id){
+      const response = await fetch('/subjects/Search', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ SubjectId: id })
+      });
+      if(response.ok){
+        var data = await response.json()
+        build_search_result(data.Students,id)
+        document.getElementById("Students").value=JSON.stringify(data.Students)
+      }
+    }
+
+    function build_search_result(Students,id){
+      htmlString=""
+      Students.forEach((student)=>{
+        htmlString += `<tr class="border-b dark:border-neutral-500">
+                        <td class="whitespace-nowrap px-6 py-4 font-medium">
+                          `+student.name+`
+                        </td>
+                        <td class="whitespace-nowrap px-6 py-4 font-medium">
+                          `+student.academicNumber+`
+                        </td>
+                        <td class="whitespace-nowrap px-6 py-4 font-medium">
+                          <button class="px-4 py-2 bg-green-500 text-white rounded shadow" onclick="register_new_student('`+id+`','`+student.id+`')">
+                            <i class="fa fa-add"></i>
+                            Register
+                          </button>
+                        </td>
+                      </tr>`
+      })
+      document.getElementById("Search_body").innerHTML=htmlString
+
+    }
+
+    async function register_new_student(SubjectId,StudentId){
+      const response = await fetch('/subjects/Registration', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ SubjectId:SubjectId,UserId:StudentId })
+      });
+      if(response.ok){
+        var data = await response.json()
+        if(data.msg=="Done"){
+          let Students = JSON.parse(document.getElementById("Students").value)
+          let x=0;
+          Students = Students.filter((ele)=>{
+            if(ele.id!=StudentId){return ele}
+            else{x=ele}
+          })
+          y={user:x}
+          build_search_result(Students,SubjectId)
+          document.getElementById("Students").value=JSON.stringify(Students)
+          let Register = JSON.parse(document.getElementById("inRegister").value)
+          Register.push(y)
+          document.getElementById("inRegister").value=JSON.stringify(Register)
+          console.log(Register)
+          RSE()
+        }
+      }
+    }
+
   </script>
   <%- include('../layout/footer.ejs') %>
