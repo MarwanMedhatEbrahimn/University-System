@@ -167,7 +167,10 @@ router.get('/users/edit/:id',isAdmin, async (req, res) => {
         id: Number(req.params.id)
       }
     })
-    const Departments = await prisma.Department.findMany({where:{OR: [{state:"Open"},{id:userView.departmentId}]}})
+    let Departments
+    if(userView.departmentId!=null){
+      Departments = await prisma.Department.findMany({where:{OR: [{state:"Open"},{id:userView.departmentId}]}})
+    }
     userView.type = getUserType(user)
     res.render('users/edit', { active: req.active, userView: userView, Departments:Departments })
   } catch (error) {
