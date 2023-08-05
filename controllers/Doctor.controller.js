@@ -7,7 +7,7 @@ const {isDoctor} = require("../middlewares/auth")
 router.get('/Doctor/subject/:id',isDoctor, async (req, res, next) => {
   try {
     Files = await prisma.Files.findMany({where:{SubjectId:Number(req.params.id)}})
-    res.render('doctor/index',{ Files:Files,id:Number(req.params.id), active: req.active})
+    res.render('doctor/Index',{ Files:Files,id:Number(req.params.id), active: req.active})
   } catch (error) {
     next(error)
   }
