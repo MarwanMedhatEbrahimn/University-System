@@ -4,7 +4,7 @@ function isStudent(req, res, next){
       next();
     } else {
       // If the user is not an Student, return an error response
-      res.status(403).send('3YB YA 7MDA');
+      res.status(403).send('Access denied');
     }
 }
 function isAdmin(req, res, next) {
@@ -13,7 +13,7 @@ function isAdmin(req, res, next) {
      next();
    } else {
      // If the user is not an administrator, return an error response
-     res.status(403).send('3YB YA 7MDA');
+     res.status(403).send('Access denied');
    }
  }
  function isDoctor(req, res, next) {
@@ -22,7 +22,7 @@ function isAdmin(req, res, next) {
      next();
    } else {
      // If the user is not an Doctor, return an error response
-     res.status(403).send('3YB YA 7MDA');
+     res.status(403).send('Access denied');
    }
  }
 
